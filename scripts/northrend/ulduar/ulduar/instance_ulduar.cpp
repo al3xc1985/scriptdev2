@@ -274,6 +274,9 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_ULDUAR_COLOSSUS:
             m_luiLeviathanPreadds.push_back(pCreature->GetGUID());
             break;
+        case NPC_IRON_CONSTRUCT:
+            m_luiConstructsGUIDs.push_back(pCreature->GetGUID());
+            break;
      }
 }
 
@@ -523,17 +526,28 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(m_uiXT002GateGUID);
                 DoUseDoorOrButton(m_uiLightningDoorGUID);
             }
-            // uncomment when implemented
-            //if (uiData == IN_PROGRESS)
-            //    SetSpecialAchievementCriteria(TYPE_ACHIEV_SAFETY_DANCE, true);
             break;
         case TYPE_IGNIS:
             m_auiEncounter[1] = uiData;
-            //OpenXtDoor();       // remove when leviathan implemented
+            if (uiData == FAIL)
+            {
+                if (!m_luiConstructsGUIDs.empty())
+                {
+                    for (std::list<uint64>::iterator itr = m_luiConstructsGUIDs.begin(); itr != m_luiConstructsGUIDs.end(); )
+                    {
+                        if (Creature* pConstruct = instance->GetCreature(*itr))
+                        {
+                            if (!pConstruct->isAlive())
+                                pConstruct->Respawn();
+                        }
+                    }
+                }
+            }
+            if (uiData == DONE)
+                m_luiConstructsGUIDs.clear();
             break;
         case TYPE_RAZORSCALE:
             m_auiEncounter[2] = uiData;
-            //OpenXtDoor();       // remove when leviathan implemented
             break;
         case TYPE_XT002:
             m_auiEncounter[3] = uiData;
@@ -633,7 +647,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 DoRespawnGameObject(m_uiHodirRareLootGUID, 30*MINUTE);
             break;
         case TYPE_ASSEMBLY_HARD:
-            m_auiHardBoss[2] = uiData;                      // TODO: add extra loot
+            m_auiHardBoss[2] = uiData;
             break;
         case TYPE_FREYA_HARD:
             m_auiHardBoss[6] = uiData;                      // Hard mode loot in in script
@@ -940,45 +954,6 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
     {
         case ACHIEV_CRIT_UNBROKEN_N:
             break;
-            // Naxx achievs - REMOVE
-        /*case ACHIEV_CRIT_SAFETY_DANCE_N:
-        case ACHIEV_CRIT_SAFETY_DANCE_H:
-            return m_abAchievCriteria[TYPE_ACHIEV_SAFETY_DANCE];
-        case ACHIEV_CRIT_KNOCK_YOU_OUT_N:
-        case ACHIEV_CRIT_KNOCK_YOU_OUT_H:
-            return m_abAchievCriteria[TYPE_ACHIEV_KNOCK_YOU_OUT];
-        case ACHIEV_CRIT_HUNDRED_CLUB_N:
-        case ACHIEV_CRIT_HUNDRED_CLUB_H:
-            return m_abAchievCriteria[TYPE_ACHIEV_HUNDRED_CLUB];
-        case ACHIEV_CRIT_SHOCKING_N:
-        case ACHIEV_CRIT_SHOCKING_H:
-            return m_abAchievCriteria[TYPE_ACHIEV_SHOCKING];
-        case ACHIEV_CRIT_SPORE_LOSER_N:
-        case ACHIEV_CRIT_SPORE_LOSER_H:
-            return m_abAchievCriteria[TYPE_ACHIEV_SPORE_LOSER];
-        case ACHIEV_CRIT_GET_ENOUGH_N:
-        case ACHIEV_CRIT_GET_ENOUGH_H:
-            return m_abAchievCriteria[TYPE_ACHIEV_GET_ENOUGH];
-        // 'The Immortal'(25m) or 'Undying'(10m) - (achievs 2186, 2187)
-        case ACHIEV_CRIT_IMMORTAL_KEL:
-        case ACHIEV_CRIT_IMMOORTAL_LOA:
-        case ACHIEV_CRIT_IMMOORTAL_THAD:
-        case ACHIEV_CRIT_IMMOORTAL_MAEX:
-        case ACHIEV_CRIT_IMMOORTAL_HORSE:
-        case ACHIEV_CRIT_UNDYING_KEL:
-        case ACHIEV_CRIT_UNDYING_HORSE:
-        case ACHIEV_CRIT_UNDYING_MAEX:
-        case ACHIEV_CRIT_UNDYING_LOA:
-        case ACHIEV_CRIT_UNDYING_THAD:
-        {
-            // First, check if all bosses are killed (except the last encounter)
-            uint8 uiEncounterDone = 0;
-            //for (uint8 i = 0; i < TYPE_KELTHUZAD; ++i)
-            //    if (m_auiEncounter[i] == DONE)
-            //        ++uiEncounterDone;
-
-            return uiEncounterDone >= 14 && GetData(TYPE_UNDYING_FAILED) != DONE;
-        }*/
         default:
             return false;
     }
@@ -1097,6 +1072,29 @@ void instance_ulduar::SpawnFriendlyKeeper(uint32 uiWho)
         case NPC_THORIM_IMAGE:  pPlayer->SummonCreature(NPC_THORIM_IMAGE,  m_aKeepersSpawnLocs[3].m_fX, m_aKeepersSpawnLocs[3].m_fY, m_aKeepersSpawnLocs[3].m_fZ, m_aKeepersSpawnLocs[3].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;
         case NPC_FREYA_IMAGE:   pPlayer->SummonCreature(NPC_FREYA_IMAGE,   m_aKeepersSpawnLocs[0].m_fX, m_aKeepersSpawnLocs[0].m_fY, m_aKeepersSpawnLocs[0].m_fZ, m_aKeepersSpawnLocs[0].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;
     }
+}
+
+// Return some random construct for Ignis event
+Creature* instance_ulduar::GetConstructToActivate()
+{
+    if (!m_luiConstructsGUIDs.empty())
+    {
+        std::vector<Creature*> m_vConstructs;
+        // check first if the construct hasn't been activated
+        for (std::list<uint64>::iterator itr = m_luiConstructsGUIDs.begin(); itr != m_luiConstructsGUIDs.end(); itr++)
+        {
+            if (Creature* pConstruct = instance->GetCreature(*itr))
+            {
+                if (pConstruct->isAlive() && pConstruct->hasUnitState(UNIT_STAT_STUNNED))
+                    m_vConstructs.push_back(pConstruct);
+            }
+        }
+
+        // randomize the unactivated constructs
+        if (!m_vConstructs.empty())
+            return m_vConstructs[urand(0, m_vConstructs.size() - 1)];
+    }
+    return NULL;
 }
 
 void instance_ulduar::Load(const char* strIn)

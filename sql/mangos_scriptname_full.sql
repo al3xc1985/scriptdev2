@@ -1184,6 +1184,8 @@ UPDATE creature_template SET ScriptName='npc_brann_hos' WHERE entry=28070;
 
 /* ULDUAR */
 UPDATE instance_template SET ScriptName='instance_ulduar' WHERE map=603;
+UPDATE creature_template SET ScriptName='boss_ignis' WHERE entry=33118;
+UPDATE creature_template SET ScriptName='npc_iron_construct' WHERE entry=33121;
 
 /* UN'GORO CRATER */
 UPDATE creature_template SET ScriptName='npc_ame01' WHERE entry=9623;

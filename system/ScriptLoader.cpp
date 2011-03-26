@@ -7,6 +7,10 @@
 // battlegrounds
 extern void AddSC_battleground();
 
+// outdoor pvp
+extern void AddSC_outdoor_pvp_silithus();
+extern void AddSC_outdoor_pvp_eastern_plaguelands();
+
 // custom
 
 // examples
@@ -496,6 +500,10 @@ void AddScripts()
 {
     // battlegrounds
     AddSC_battleground();
+
+    // outdoor pvp
+    AddSC_outdoor_pvp_silithus();
+    AddSC_outdoor_pvp_eastern_plaguelands();
 
     // custom
 

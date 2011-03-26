@@ -1220,6 +1220,7 @@ UPDATE creature_template SET ScriptName='boss_ymiron' WHERE entry=26861;
 UPDATE instance_template SET ScriptName='instance_pinnacle' WHERE map=575;
 
 /* VAULT OF ARCHAVON */
+UPDATE instance_template SET ScriptName='instance_vault_of_archavon' WHERE map=624;
 
 
 /* VIOLET HOLD */

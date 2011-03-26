@@ -7,7 +7,7 @@
 
 enum
 {
-    MAX_ENCOUNTER               = 14,
+    MAX_ENCOUNTER               = 15,
     HARD_MODE_ENCOUNTER         = 9,
     KEEPER_ENCOUNTER            = 4,
     TELEPORTER_ENCOUNTER        = 3,
@@ -53,12 +53,42 @@ enum
     TYPE_XT002_TP               = 28,
     TYPE_MIMIRON_TP             = 29,
 
+    TYPE_LEVIATHAN_EVENT        = 30,
+
+    //other-> these won't be saved to db
+    TYPE_RUNE_GIANT             = 39,
+    TYPE_RUNIC_COLOSSUS         = 31,
+    TYPE_LEVIATHAN_MK           = 32,
+    TYPE_VX001                  = 33,
+    TYPE_AERIAL_UNIT            = 34,
+    TYPE_YOGG_BRAIN             = 35,
+    TYPE_MIMIRON_PHASE          = 36,
+    TYPE_YOGG_PHASE             = 37,
+    TYPE_VISION_PHASE           = 38,
+
+    TYPE_UNDYING_FAILED         = 16,                       // Achievements Undying and Immortal, needs to be saved to database
+
+    MAX_SPECIAL_ACHIEV_CRITS    = 6,
+
+    // naxx achievs - REMOVE!
+    /*TYPE_ACHIEV_SAFETY_DANCE    = 0,
+    TYPE_ACHIEV_KNOCK_YOU_OUT   = 1,
+    TYPE_ACHIEV_HUNDRED_CLUB    = 2,
+    TYPE_ACHIEV_SHOCKING        = 3,
+    TYPE_ACHIEV_SPORE_LOSER     = 4,
+    TYPE_ACHIEV_GET_ENOUGH      = 5,*/
+
     // The siege of ulduar
     NPC_LEVIATHAN               = 33113,
     NPC_IGNIS                   = 33118,
     NPC_RAZORSCALE              = 33186,
     NPC_COMMANDER               = 33210,
     NPC_XT002                   = 33293,
+
+    // Leviathan preadds
+    NPC_STEELFORGE_DEFENDER     = 33236,
+    NPC_RUNEFORGED_SENTRY       = 34234,
+    NPC_ULDUAR_COLOSSUS         = 33237,    // x > 280; y < 70
 
     // The antechamber of ulduar
     NPC_STEELBREAKER            = 32867,
@@ -141,8 +171,8 @@ enum
     // Doors and other Objects
     // The siege
     GO_SHIELD_WALL              = 194416,                   // Gate before Leviathan
-    GO_LEVIATHAN_GATE           = 194630,                   // Gate after Leviathan -> this should be used before the boss enter the arena
-    // There should be another gate after the Leviathan here which should be used during the Leviathan encounter
+    GO_LIGHTNING_DOOR           = 194905,                   // Gate after Leviathan
+    GO_LEVIATHAN_GATE           = 194630,                   // Gate before Leviathan event -> this should be used before the boss enter the arena
     GO_XT002_GATE               = 194631,                   // Gate before Xt002
     GO_BROKEN_HARPOON           = 194565,                   // Broken harpoon from Razorscale
 
@@ -185,8 +215,7 @@ enum
     GO_DARK_IRON_PORTCULIS      = 194560,                   // Door from the arena to the hallway
     GO_RUNED_STONE_DOOR         = 194557,                   // Door after the runic colossus
     GO_THORIM_STONE_DOOR        = 194558,                   // Door after the ancient rune giant
-    GO_LIGHTNING_DOOR           = 194905,                   // Arena exit door
-    GO_LIGHTNING_FIELD          = 194559,                   // For the platform animation
+    GO_LIGHTNING_FIELD          = 194559,                   // Thorim combat door
     GO_DOOR_LEVER               = 194264,                   // In front of the door
 
     // Descent to madness
@@ -200,6 +229,187 @@ enum
     // World state used for algalon timer
     WORLD_STATE_TIMER           = 4132,
     WORLD_STATE_TIMER_COUNT     = 4131,
+
+    // Achiev criterias
+    // Siege of Ulduar
+    // Leviathan
+    ACHIEV_CRIT_UNBROKEN_N      = 10044,                    // Flame Leviathan, achievs 2905, 2906
+    ACHIEV_CRIT_UNBROKEN_H      = 10045,
+    ACHIEV_CRIT_CAR_GARAGE_N_1  = 10046,                    // Flame Leviathan, achievs 2907, 2908
+    ACHIEV_CRIT_CAR_GARAGE_N_2  = 10047,
+    ACHIEV_CRIT_CAR_GARAGE_N_3  = 10048,
+    ACHIEV_CRIT_CAR_GARAGE_H_1  = 10049,
+    ACHIEV_CRIT_CAR_GARAGE_H_2  = 10050,
+    ACHIEV_CRIT_CAR_GARAGE_H_3  = 10051,
+    ACHIEV_CRIT_SHUTOUT_N       = 10054,                    // Flame Leviathan, achievs 2911, 2912
+    ACHIEV_CRIT_SHUTOUT_H       = 10055,
+    ACHIEV_CRIT_BOMBARDMENT_N   = 10056,                    // Flame Leviathan, achievs 2913, 2918
+    ACHIEV_CRIT_BOMBARDMENT_H   = 10061,
+    ACHIEV_CRIT_DEVASTATION_N   = 10057,                    // Flame Leviathan, achievs 2914, 2916
+    ACHIEV_CRIT_DEVASTATION_H   = 10059,
+    ACHIEV_CRIT_NUKED_ORBIT_N   = 10058,                    // Flame Leviathan, achievs 2915, 2917
+    ACHIEV_CRIT_NUKED_ORBIT_H   = 10060,
+    ACHIEV_CRIT_ORBIT_UARY_N    = 10218,                    // Flame Leviathan, achievs 3056, 3057
+    ACHIEV_CRIT_ORBIT_UARY_H    = 10219,
+    // Ignis
+    ACHIEV_CRIT_SHATTERED_N     = 10068,                    // Ignis, achievs 2925, 2926
+    ACHIEV_CRIT_SHATTERED_H     = 10069,
+    ACHIEV_CRIT_STOKIN_N        = 10073,                    // Ignis, achievs 2930, 2929
+    ACHIEV_CRIT_STOKIN_H        = 10072,
+    // Razorscale
+    ACHIEV_CRIT_QUICK_SHAVE_N   = 10062,                    // Razorscale, achievs 2919, 2921
+    ACHIEV_CRIT_QUICK_SHAVE_H   = 10063,
+    ACHIEV_CRIT_MEDIUM_RARE_N   = 10066,                    // Razorscale, achievs 2923, 2924
+    ACHIEV_CRIT_MEDIUM_RARE_H   = 10067,
+    // XT 002
+    ACHIEV_CRIT_ENGINEERING_N   = 10074,                    // Xt002, achievs 2931, 2932
+    ACHIEV_CRIT_ENGINEERING_H   = 10075,
+    ACHIEV_CRIT_GRAVITY_BOMBS_N = 10077,                    // Xt002, achievs 2934, 2936
+    ACHIEV_CRIT_GRAVITY_BOMBS_H = 10079,
+    ACHIEV_CRIT_SCRAPBOTS_N     = 10401,                    // Xt002, achievs 2933, 2935
+    ACHIEV_CRIT_SCRAPBOTS_H     = 10402,                    // spell 65037
+    ACHIEV_CRIT_DECONSTRUCT_N   = 10080,                    // Xt002, achievs 2937, 2938
+    ACHIEV_CRIT_DECONSTRUCT_H   = 10081,
+    ACHIEV_CRIT_HEARTBREAKER_N  = 10221,                    // Xt002, achievs 3058, 3059
+    ACHIEV_CRIT_HEARTBREAKER_H  = 10220,
+
+    // Antechamber of Ulduar
+    // Assembly of iron
+    ACHIEV_ON_YOUR_SIDE         = 2945,
+    ACHIEV_ON_YOUR_SIDE_H       = 2946,
+    SPELL_IRON_BOOT_AURA        = 58501,
+    /*ACHIEV_CHOOSE_BRUNDIR       = 2940,
+    ACHIEV_CHOOSE_BRUNDIR_H     = 2943,
+    ACHIEV_CHOOSE_MOLGEIM       = 2939,
+    ACHIEV_CHOOSE_MOLGEIM_H     = 2942,
+    ACHIEV_CHOOSE_STEELBREAKER  = 2941,
+    ACHIEV_CHOOSE_STEELBREAKER_H= 2944,
+    // Kologarn
+    ACHIEV_RUBBLE_AND_ROLL      = 2959,
+    ACHIEV_RUBBLE_AND_ROLL_H    = 2960,
+    ACHIEV_WITH_OPEN_ARMS       = 2951,
+    ACHIEV_WITH_OPEN_ARMS_H     = 2952,
+    ACHIEV_DISARMED             = 2953,
+    ACHIEV_DISARMED_H           = 2954,
+    ACHIEV_IF_LOOKS_COULD_KILL  = 2955,
+    ACHIEV_IF_LOOKS_COULD_KILL_H= 2956,*/
+    // Auriaya
+    ACHIEV_CRIT_CRAZY_CAT_N     = 10400,                    // Auriaya, achievs 3006, 3007
+    ACHIEV_CRIT_CRAZY_CAT_H     = 10184,
+    ACHIEV_CRIT_NINE_LIVES_N    = 10399,                    // Auriaya, achievs 3076, 3077
+    ACHIEV_CRIT_NINE_LIVES_H    = 10243,
+
+    // Keepers of Ulduar
+    // Freya
+    /*ACHIEV_BACK_TO_NATURE           = 2982,
+    ACHIEV_BACK_TO_NATURE_H         = 2983,
+    ACHIEV_KNOCK_WOOD               = 3177,
+    ACHIEV_KNOCK_WOOD_H             = 3185,
+    ACHIEV_KNOCK_KNOCK_WOOD         = 3178,
+    ACHIEV_KNOCK_KNOCK_WOOD_H       = 3186,
+    ACHIEV_KNOCK_KNOCK_KNOCK_WOOD   = 3179,
+    ACHIEV_KNOCK_KNOCK_KNOCK_WOOD_H = 3187,
+    // Hodir
+    ACHIEV_RARE_CACHE       = 3182,
+    ACHIEV_RARE_CACHE_H     = 3184,
+    ACHIEV_COOLEST_FRIEND   = 2963,
+    ACHIEV_COOLEST_FRIEND_H = 2965,
+    ACHIEV_GETTING_COLD     = 2967,
+    ACHIEV_GETTING_COLD_H   = 2968,
+    ACHIEV_CHEESE_FREEZE    = 2961,
+    ACHIEV_CHEESE_FREEZE_H  = 2962,*/
+    // Thorim
+    ACHIEV_CRIT_LOSE_ILLUSION_N = 10440,                    // Thorim, achievs 3176, 3183
+    ACHIEV_CRIT_LOSE_ILLUSION_H = 10457,
+    ACHIEV_CRIT_SIFFED_N        = 10289,                    // Thorim, achievs 2977, 2978
+    ACHIEV_CRIT_SIFFED_H        = 10314,
+    // Mimiron
+    ACHIEV_CRIT_FIREFIGHTER_N   = 10450,                    // Mimiron, achievs 3180, 3189
+    ACHIEV_CRIT_FIREFIGHTER_H   = 10463,
+
+    // Descent into Madness
+    // Vezax
+    ACHIEV_CRIT_SARONITE_N      = 10451,                    // Vezax, achievs 3181, 3188
+    ACHIEV_CRIT_SARONITE_H      = 10462,
+    // Yogg
+    /*ACHIEV_ALONE                = 3159,
+    ACHIEV_ALONE_H              = 3164,
+    ACHIEV_ONE_LIGHT            = 3158,
+    ACHIEV_ONE_LIGHT_H          = 3163,
+    ACHIEV_TWO_LIGHTS           = 3141,
+    ACHIEV_TWO_LIGHTS_H         = 3162,
+    ACHIEV_THREE_LIGHTS         = 3157,
+    ACHIEV_THREE_LIGHTS_H       = 3161,
+    ACHIEV_NOT_GETTING_OLDER    = 3012,
+    ACHIEV_NOT_GETTING_OLDER_H  = 3013,
+
+    // Celestial planetarium
+    // Algalon
+    ACHIEV_FEED_TEARS               = 3004,
+    ACHIEV_FEED_TEARS_H             = 3005,     // nobody dies in the raid lockout
+    ACHIEV_HERALD_OF_TITANS         = 3316,
+    ACHIEV_OBSERVED                 = 3036,
+    ACHIEV_OBSERVED_H               = 3037,
+    ACHIEV_SUPERMASSIVE             = 3003,
+    ACHIEV_SUPERMASSIVE_H           = 3002,*/
+
+    // Achiev Champion / conquerer of Ulduar; 2903, 2904
+    ACHIEV_CRIT_CHAMP_KOLO      = 10348,
+    ACHIEV_CRIT_CHAMP_LEVIATHAN = 10042,
+    ACHIEV_CRIT_CHAMP_IGNIS     = 10342,
+    ACHIEV_CRIT_CHAMP_RAZOR     = 10340,
+    ACHIEV_CRIT_CHAMP_VEZAX     = 10349,
+    ACHIEV_CRIT_CHAMP_YOGG      = 10350,
+    ACHIEV_CRIT_CHAMP_XT002     = 10341,
+    ACHIEV_CRIT_CHAMP_MIMIRON   = 10347,
+    ACHIEV_CRIT_CHAMP_AURIAYA   = 10351,
+    ACHIEV_CRIT_CHAMP_COUNCIL   = 10598,            // spell = 65915
+    ACHIEV_CRIT_CHAMP_HODIR     = 10439,            // spell = 64899
+    ACHIEV_CRIT_CHAMP_THORIM    = 10403,            // spell = 64985
+    ACHIEV_CRIT_CHAMP_FREYA     = 10582,            // spell = 65074
+
+    ACHIEV_CRIT_CONQ_KOLO       = 10357,
+    ACHIEV_CRIT_CONQ_LEVIATHAN  = 10352,
+    ACHIEV_CRIT_CONQ_IGNIS      = 10355,
+    ACHIEV_CRIT_CONQ_RAZOR      = 10353,
+    ACHIEV_CRIT_CONQ_VEZAX      = 10362,
+    ACHIEV_CRIT_CONQ_YOGG       = 10364,
+    ACHIEV_CRIT_CONQ_XT002      = 10354,
+    ACHIEV_CRIT_CONQ_MIMIRON    = 10361,
+    ACHIEV_CRIT_CONQ_AURIAYA    = 10363,
+    ACHIEV_CRIT_CONQ_COUNCIL    = 10599,            // spell = 65195
+    ACHIEV_CRIT_CONQ_HODIR      = 10719,            // spell = 64899
+    ACHIEV_CRIT_CONQ_THORIM     = 10404,            // spell = 64985
+    ACHIEV_CRIT_CONQ_FREYA      = 10583,            // spell = 65074
+
+
+
+    // Achievement related
+    /* Naxx Achievs - REMOVE!
+    ACHIEV_CRIT_SAFETY_DANCE_N  = 7264,                     // Heigan, achievs 1996, 2139
+    ACHIEV_CRIT_SAFETY_DANCE_H  = 7548,
+    ACHIEV_CRIT_KNOCK_YOU_OUT_N = 7265,                     // Faerlina, achievs 1997, 2140
+    ACHIEV_CRIT_KNOCK_YOU_OUT_H = 7549,
+    ACHIEV_CRIT_HUNDRED_CLUB_N  = 7567,                     // Sapphiron, achievs 2146, 2147
+    ACHIEV_CRIT_HUNDRED_CLUB_H  = 7568,
+    ACHIEV_CRIT_SHOCKING_N      = 7604,                     // Thaddius, achievs 2178, 2179
+    ACHIEV_CRIT_SHOCKING_H      = 7605,
+    ACHIEV_CRIT_SPORE_LOSER_N   = 7612,                     // Loatheb, achievs 2182, 2183
+    ACHIEV_CRIT_SPORE_LOSER_H   = 7613,
+    ACHIEV_CRIT_GET_ENOUGH_N    = 7614,                     // Kel'Thuzad, achievs 2184, 2185
+    ACHIEV_CRIT_GET_ENOUGH_H    = 7615,
+
+    // 'The Immortal'(25m) or 'Undying'(10m) - (achievs 2186, 2187)
+    ACHIEV_CRIT_IMMORTAL_KEL    = 7616,
+    ACHIEV_CRIT_IMMOORTAL_LOA   = 13236,
+    ACHIEV_CRIT_IMMOORTAL_THAD  = 13235,
+    ACHIEV_CRIT_IMMOORTAL_MAEX  = 13234,
+    ACHIEV_CRIT_IMMOORTAL_HORSE = 13233,
+    ACHIEV_CRIT_UNDYING_KEL     = 7617,
+    ACHIEV_CRIT_UNDYING_HORSE   = 13237,
+    ACHIEV_CRIT_UNDYING_MAEX    = 13238,
+    ACHIEV_CRIT_UNDYING_LOA     = 13239,
+    ACHIEV_CRIT_UNDYING_THAD    = 13240,*/
 };
 
 class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
@@ -213,6 +423,9 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
 
         void OnCreatureCreate(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);
+        void OnCreatureEnterCombat(Creature* pCreature);
+        void OnCreatureDeath(Creature* pCreature);
+        void OnPlayerEnter(Player* pPlayer);
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
@@ -221,11 +434,13 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
         const char* Save() { return strInstData.c_str(); }
         void Load(const char* chrIn);
 
-        // Dummy, leave till correct solution for hardmode found
         bool CheckConditionCriteriaMeet(Player const* pSource, uint32 uiMapId, uint32 uiInstanceConditionId);
+        void SetSpecialAchievementCriteria(uint32 uiType, bool bIsMet);
+        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
 
+        void DoSpawnFlameLeviathanIfCan();
         void DoOpenMadnessDoorIfCan();
-
+        void OpenXtDoor();
         void SpawnFriendlyKeeper(uint32 uiWho);
 
     protected:
@@ -234,6 +449,12 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
         uint32 m_auiHardBoss[HARD_MODE_ENCOUNTER];
         uint32 m_auiUlduarKeepers[KEEPER_ENCOUNTER];
         uint32 m_auiUlduarTeleporters[TELEPORTER_ENCOUNTER];
+        bool m_abAchievCriteria[MAX_SPECIAL_ACHIEV_CRITS];
+        uint32 m_auiMiniBoss[6];
+
+        uint32 m_uiMimironPhase;
+        uint32 m_uiYoggPhase;
+        uint32 m_uiVisionPhase;
 
         // Creatures
         uint64 m_uiLeviathanGUID;
@@ -270,6 +491,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
         // Doors & Objects
         // The siege
         uint64 m_uiShieldWallGUID;
+        uint64 m_uiLightningDoorGUID;
         uint64 m_uiLeviathanGateGUID;
         uint64 m_uiXT002GateGUID;
         uint64 m_uiBrokenHarpoonGUID;
@@ -320,6 +542,9 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
         uint64 m_uiMimironLootGUID;
         uint64 m_uiMimironHardLootGUID;
         uint64 m_uiAlagonLootGUID;
+
+        std::list<uint64> m_luiLeviathanPreadds;
+        std::set<uint32> m_suiSortedLeviathanAdds;
 };
 
 #endif

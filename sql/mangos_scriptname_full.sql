@@ -889,6 +889,9 @@ UPDATE instance_template SET ScriptName='instance_razorfen_kraul' WHERE map=47;
 /* REDRIDGE MOUNTAINS */
 UPDATE creature_template SET ScriptName='npc_corporal_keeshan' WHERE entry=349;
 
+/* RUBY SANCTUM */
+UPDATE instance_template SET ScriptName='instance_ruby_sanctum' WHERE map=724;
+
 /* RUINS OF AHN'QIRAJ */
 UPDATE instance_template SET ScriptName='instance_ruins_of_ahnqiraj' WHERE map=509;
 UPDATE creature_template SET ScriptName='mob_anubisath_guardian' WHERE entry=15355;
